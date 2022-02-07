@@ -12,16 +12,29 @@ import {
 import useCountries from '../../hooks/useCountries';
 
 const Countries: React.FC = (): JSX.Element => {
-  const { isLoading, countries, updateName, updateCode, loadMore, hasMore } =
-    useCountries();
+  const {
+    isLoading,
+    countries,
+    searchName,
+    searchCode,
+    updateName,
+    updateCode,
+    loadMore,
+    hasMore,
+  } = useCountries();
 
   return (
     <Container>
       <CountryList>
         <CountryHeader>
-          <Input placeholder='Search country by name' onChange={updateName} />
+          <Input
+            placeholder='Search country by name'
+            value={searchName}
+            onChange={updateName}
+          />
           <Input
             placeholder='Search country by alpha code'
+            value={searchCode}
             onChange={updateCode}
           />
         </CountryHeader>
@@ -38,7 +51,7 @@ const Countries: React.FC = (): JSX.Element => {
             <Content>
               {countries.map((country: ICountry) => (
                 <CountryItem
-                  key={`country-${country.name.official}`}
+                  key={`country-${country.cioc.toLowerCase()}`}
                   country={country}
                 />
               ))}

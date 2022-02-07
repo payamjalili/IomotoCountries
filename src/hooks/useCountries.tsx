@@ -1,17 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getAllCountries } from '../services/Countries';
 import { ICountry } from '../interfaces/Country';
+import { RootStateOrAny, useSelector, useDispatch } from 'react-redux';
+import { updateKeywords } from '../features/search';
 
 const useCountries = () => {
   const PAGE_SIZE = 12;
+  const { nameKeyword, codeKeyword } = useSelector(
+    (state: RootStateOrAny) => state.search.value
+  );
+  const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [pageNum, setPageNum] = useState<number>(1);
   const [allCountries, setAllCountries] = useState<ICountry[]>([]);
   const [countries, setCountries] = useState<ICountry[]>([]);
-  const [searchName, setSearchName] = useState<string>('');
-  const [searchCode, setSearchCode] = useState<string>('');
+  const [searchName, setSearchName] = useState<string>(nameKeyword);
+  const [searchCode, setSearchCode] = useState<string>(codeKeyword);
 
   const updateName = (e: any) => {
     setSearchName(e.target.value);
@@ -32,6 +38,10 @@ const useCountries = () => {
       })
       .catch((err) => {})
       .finally(() => setIsLoading(false));
+
+    dispatch(
+      updateKeywords({ nameKeyword: searchName, codeKeyword: searchCode })
+    );
   }, [searchName, searchCode]);
 
   useEffect(() => {
@@ -55,7 +65,7 @@ const useCountries = () => {
     const start = (pageNum - 1) * PAGE_SIZE;
     const end = pageNum * PAGE_SIZE;
     setCountries((pre) => [...pre, ...allCountries.slice(start, end)]);
-  }, [pageNum, allCountries]);
+  }, [pageNum]);
 
   useEffect(() => {
     if (
@@ -67,7 +77,16 @@ const useCountries = () => {
     }
   }, [countries, allCountries]);
 
-  return { isLoading, countries, updateName, updateCode, loadMore, hasMore };
+  return {
+    isLoading,
+    countries,
+    searchName,
+    searchCode,
+    updateName,
+    updateCode,
+    loadMore,
+    hasMore,
+  };
 };
 
 export default useCountries;
