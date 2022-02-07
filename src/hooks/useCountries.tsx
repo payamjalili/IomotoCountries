@@ -55,7 +55,7 @@ const useCountries = () => {
     const start = (pageNum - 1) * PAGE_SIZE;
     const end = pageNum * PAGE_SIZE;
     setCountries((pre) => [...pre, ...allCountries.slice(start, end)]);
-  }, [pageNum]);
+  }, [pageNum, allCountries]);
 
   useEffect(() => {
     if (
@@ -65,7 +65,7 @@ const useCountries = () => {
     ) {
       setHasMore(false);
     }
-  }, [countries]);
+  }, [countries, allCountries]);
 
   return { isLoading, countries, updateName, updateCode, loadMore, hasMore };
 };
