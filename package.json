@@ -1,6 +1,5 @@
 {
   "name": "iomoto-countries",
-  "homepage": "https://payamjalili.github.io/IomotoCountries/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
