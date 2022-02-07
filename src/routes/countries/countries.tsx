@@ -2,11 +2,18 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ICountry } from '../../interfaces/Country';
 import { Content, CountryHeader, CountryList } from './countries.styled';
-import { Container, Center, CountryItem, Input } from '../../components';
+import {
+  Container,
+  Center,
+  CountryItem,
+  Input,
+  LoadMore,
+} from '../../components';
 import useCountries from '../../hooks/useCountries';
 
 const Countries: React.FC = (): JSX.Element => {
-  const { isLoading, countries, updateName, updateCode } = useCountries();
+  const { isLoading, countries, updateName, updateCode, loadMore, hasMore } =
+    useCountries();
 
   return (
     <Container>
@@ -27,14 +34,19 @@ const Countries: React.FC = (): JSX.Element => {
           <Center>No Country was found.</Center>
         )}
         {!isLoading && countries.length !== 0 && (
-          <Content>
-            {countries.map((country: ICountry) => (
-              <CountryItem
-                key={`country-${country.name.official}`}
-                country={country}
-              />
-            ))}
-          </Content>
+          <>
+            <Content>
+              {countries.map((country: ICountry) => (
+                <CountryItem
+                  key={`country-${country.name.official}`}
+                  country={country}
+                />
+              ))}
+            </Content>
+            {hasMore && (
+              <LoadMore onClick={loadMore}>Load more country...</LoadMore>
+            )}
+          </>
         )}
       </CountryList>
     </Container>
