@@ -8,6 +8,7 @@ export interface ICountry {
   capital: string[];
   population: number;
   subregion: string;
+  cioc: string;
 }
 
 interface ICountryName {

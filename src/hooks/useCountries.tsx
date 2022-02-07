@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getAllCountries, searchCountries } from '../services/Countries';
+import { getAllCountries } from '../services/Countries';
 import { ICountry } from '../interfaces/Country';
 
 const useCountries = () => {
@@ -11,14 +11,14 @@ const useCountries = () => {
   const [allCountries, setAllCountries] = useState<ICountry[]>([]);
   const [countries, setCountries] = useState<ICountry[]>([]);
   const [searchName, setSearchName] = useState<string>('');
-  //   const [searchCode, setSearchCode] = useState<string>('');
+  const [searchCode, setSearchCode] = useState<string>('');
 
   const updateName = (e: any) => {
     setSearchName(e.target.value);
   };
 
   const updateCode = (e: any) => {
-    //setSearchCode(e.target.value);
+    setSearchCode(e.target.value);
   };
 
   const loadMore = () => {
@@ -26,23 +26,19 @@ const useCountries = () => {
   };
 
   const getCountries = useCallback(() => {
-    if (searchName === '') {
-      getAllCountries()
-        .then((res) => {
-          setAllCountries(res);
-          setCountries(res.slice(0, PAGE_SIZE));
-        })
-        .catch((err) => {})
-        .finally(() => setIsLoading(false));
-    } else {
-      searchCountries(searchName)
-        .then((res) => {
-          if (Array.isArray(res)) setAllCountries(res);
-        })
-        .catch((err) => {})
-        .finally(() => setIsLoading(false));
-    }
-  }, [searchName]);
+    getAllCountries(searchName, searchCode)
+      .then((res) => {
+        setAllCountries(res);
+      })
+      .catch((err) => {})
+      .finally(() => setIsLoading(false));
+  }, [searchName, searchCode]);
+
+  useEffect(() => {
+    setCountries(allCountries.slice(0, PAGE_SIZE));
+    setPageNum(1);
+    setHasMore(true);
+  }, [allCountries]);
 
   useEffect(() => {
     setCountries([]);
@@ -53,7 +49,7 @@ const useCountries = () => {
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [searchName, getCountries]);
+  }, [getCountries]);
 
   useEffect(() => {
     const start = (pageNum - 1) * PAGE_SIZE;
