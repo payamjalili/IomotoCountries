@@ -6,14 +6,14 @@ const useCountries = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [countries, setCountries] = useState<ICountry[]>([]);
   const [searchName, setSearchName] = useState<string>('');
-  const [searchCode, setSearchCode] = useState<string>('');
+  //   const [searchCode, setSearchCode] = useState<string>('');
 
   const updateName = (e: any) => {
     setSearchName(e.target.value);
   };
 
   const updateCode = (e: any) => {
-    setSearchCode(e.target.value);
+    //setSearchCode(e.target.value);
   };
 
   const getCountries = useCallback(() => {
